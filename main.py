@@ -3,11 +3,10 @@ load_dotenv()
 
 import asyncio
 from google.adk.runners import InMemoryRunner
-from agent import root_agent
+from agent import blog_post_agent
 from rich.console import Console
 from rich.markdown import Markdown
 console = Console()
-
 
 def extract_final_text(response):
     """
@@ -28,11 +27,13 @@ def extract_final_text(response):
 
 
 async def main():
-    runner = InMemoryRunner(agent=root_agent)
-
+    runner = InMemoryRunner(agent=blog_post_agent)
     response = await runner.run_debug(
-        "What are the latest advancements in quantum computing and what do they mean for AI?"
+        "Write a blog post about the benefits of multi-agent systems for software developers"
     )
+            
+
+
 
     final_answer = extract_final_text(response)
 

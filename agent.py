@@ -1,9 +1,9 @@
 from google.adk.agents import Agent, SequentialAgent
-from google.adk.model.google_llm import Gemini
+from google.adk.models.google_llm import Gemini
 from google.genai import types
 from google.adk.tools import google_search
 
-retry_config = types.HttpRetyOptions(
+retry_config = types.HttpRetryOptions(
     attempts = 5,
     exp_base= 7,
     initial_delay = 1,
@@ -22,20 +22,21 @@ Editor Agent - Edits a blog post draft for clarity and structure
 """
 
 outline_agent = Agent(
-    name ="Outline Agent",
+    name ="OutlineAgent",
     model =Gemini(
         model="gemini-2.5-flash-lite",
         retry_config=retry_config
     ),
-    instuction = """Create a blog outline for the given topic with:
+    instruction = """Create a blog outline for the given topic with:
     1. A catchy headline
     2. An introduction hook
     3. 3-5 main sections with 2-3 bullet points for each
     4. A concluding thought""",
+
     output_key ="blog_outline"
 )
 writer_agent = Agent(
-    name = "Writer Agent",
+    name = "WriterAgent",
     model = Gemini(
         model="gemini-2.5-flash-lite",
         retry_config=retry_config,
@@ -45,7 +46,7 @@ writer_agent = Agent(
     output_key = "blog_draft"
 )
 editor_agent = Agent(
-    name ="Editor Agent",
+    name ="EditorAgent",
     model = Gemini(
         model="gemini-2.5-flash-lite",
         retry_config= retry_config,
@@ -56,6 +57,6 @@ editor_agent = Agent(
 )
 
 blog_post_agent = SequentialAgent(
-    name ="Blog Pipeline",
+    name ="BlogPipeline",
     sub_agents =[outline_agent, writer_agent, editor_agent]
 )
